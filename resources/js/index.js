@@ -1,6 +1,9 @@
+
+
 const nameInput = document.getElementById("my-name-input");
 const myMessage = document.getElementById("my-message");
 const sendButton = document.getElementById("send-button");
+const saveButton = document.getElementById("save-button");
 const chatBox = document.getElementById("chat");
 const MILLISECONDS_IN_TEN_SECONDS = 10000;
 
@@ -11,6 +14,22 @@ function fetchMessages() {
     return fetch(serverURL)
         .then( response => response.json())
 }
+//String(nameInput);
+
+
+
+saveButton.addEventListener("click", function(saveButtonClickEvent) {
+  saveButtonClickEvent.preventDefault();
+  //newNameInput = nameInput.toString();
+  localStorage.setItem('saveButton', nameInput.value);
+  
+  console.log(localStorage.getItem('saveButton'));
+  //document.getElementById('nameInput').value = localStorage.getItem('saveButton');
+  
+    sendButton.disabled = false;
+  
+
+});
 
 async function updateMessages() {
   // Fetch Messages
@@ -30,6 +49,8 @@ function formatMessage(message, myNameInput) {
   const time = new Date(message.timestamp);
   const formattedTime = `${time.getHours()}:${time.getMinutes()}`;
 
+
+
   if (myNameInput === message.sender) {
       return `
       <div class="mine messages">
@@ -40,6 +61,7 @@ function formatMessage(message, myNameInput) {
               ${formattedTime}
           </div>
       </div>
+
       `
   } else {
       return `
@@ -51,6 +73,7 @@ function formatMessage(message, myNameInput) {
                   ${message.sender} ${formattedTime}
               </div>
           </div>
+        
       `
   }
 }
@@ -63,6 +86,8 @@ function sendMessages(username, text) {
       sender: username,
       text: text,
       timestamp: new Date()
+
+      
   }
 
   fetch (serverURL, {
@@ -74,11 +99,20 @@ function sendMessages(username, text) {
   });
 }
 
+//function enableSend(){
+  //document.getElementById("sendButton").disabled = false;
+//}
+
 sendButton.addEventListener("click", function(sendButtonClickEvent) {
   sendButtonClickEvent.preventDefault();
   const sender = nameInput.value;
   const message = myMessage.value;
 
+  console.log(nameInput);
+
   sendMessages(sender,message);
   myMessage.value = "";
+
+  //start.disabled = true;
+  alert("Please input your name");
 });
